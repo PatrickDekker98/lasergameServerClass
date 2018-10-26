@@ -1,7 +1,10 @@
 #include <iostream>
+#include "tcpServer.hpp"
 
-void main(){
-
+int main(){
+    tcpServer S = tcpServer(8080);
+    S.listenNewClient();
+    S.recieve();
 
 
 }
