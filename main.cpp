@@ -2,9 +2,11 @@
 #include "tcpServer.hpp"
 
 int main(){
-    tcpServer S = tcpServer(8080);
+    clients c = clients(6);
+    tcpServer S = tcpServer(8080, c);
     S.listenNewClient();
-    S.recieve();
-
+    while(1){
+        S.recieve();
+    }
 
 }
