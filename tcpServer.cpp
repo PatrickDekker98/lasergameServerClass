@@ -7,13 +7,13 @@
 #include <sys/socket.h>
 #include <string>
 
-tcpServer::tcpServer(unsigned int port, clients c):
+tcpServer::tcpServer(unsigned int port, clients &c):
     port(port),
     c(c)
 {
-    for(int i = 0; i < c.maxClients; i++){
-        c.client[i] = 0;
-    }
+//    for(int i = 0; i < c.maxClients; i++){
+//        c.client[i] = 0;
+//    }
     sock = socket(AF_INET, SOCK_STREAM, 0);
 
     if (sock < 0) {
@@ -34,12 +34,16 @@ tcpServer::tcpServer(unsigned int port, clients c):
         exit(1);   
     }
 
+    for(int i = 0; i < c.maxClients; i++){
+        std::cout << c.client[i] << "\n";
+    }
+
 }
 
 void tcpServer::listenNewClient(){
     fd_set readfds;
 
-    listen(sock,3);
+    listen(sock,6);
     FD_ZERO(&readfds);
     FD_SET(sock, &readfds);
     addrlen = sizeof(serv_addr);
@@ -59,20 +63,27 @@ void tcpServer::listenNewClient(){
             std::cout << "select error\n";
         }
         if(FD_ISSET(sock, &readfds)){
+//            std::cout << "ok\n";
             nSock = accept(sock, (struct sockaddr *)&serv_addr, (socklen_t*)&addrlen);
             if(nSock < 0){
                 std::cout << "accept";
                 exit(1);
             }
+            std::cout << nSock << "new socket\n";
 
             for(int i = 0; i < c.maxClients; i++){
                 if(c.client[i] == 0){
+//                    getpeername(sd, (struct sockaddr *)&serv_addr, (socklen_t*)&addrlen);
+                    strcpy(c.ip[i], inet_ntoa(serv_addr.sin_addr));
+//                    c.ip[i] = inet_ntoa(serv_addr.sin_addr);
                     c.client[i] = nSock;
                     break;
                 }
             }
         
         }
+
+//        std::cout <<sd << "\n";
     
     }
 //    clilen = sizeof(cli_addr);
@@ -85,7 +96,26 @@ void tcpServer::listenNewClient(){
 }
 
 void tcpServer::recieve(){
-    memset(buffer,'0', 256);
+    fd_set readfds;
+    addrlen = sizeof(serv_addr);
+    for ( int i = 0; i < c.maxClients; i++){
+        sd = c.client[i];
+        if (FD_ISSET(sd, &readfds)){
+            valread = read(sd, buffer, 256);
+            if(valread == 0){
+                getpeername(sd, (struct sockaddr *)&serv_addr, (socklen_t *)&addrlen);
+                std::cout << inet_ntoa(serv_addr.sin_addr);
+                c.client[i] = 0;
+            }else { 
+                std::string s(buffer);
+                std::string subs = s.substr(0, valread);
+
+//                buffer[valread] = '\0';
+                std::cout << subs;
+            }
+        } 
+    }
+    /*    memset(buffer,'0', 256);
     n = read(newSock, buffer, 255);
     if (n <= 0){
         std::cout << "no msg\n";
@@ -94,6 +124,35 @@ void tcpServer::recieve(){
         std::string subs = s.substr(0, n);
         std::cout << subs << "\n";
 
+    }*/
+} 
+
+void tcpServer::sendCli(int cli, const char* msg){
+//    std::cout << " ok";
+    send(cli, msg, strlen(msg), 0);
+}
+
+int tcpServer::getClient(const char* ip){
+    for(int i = 0; i < c.maxClients;i++ ){
+        if(c.ip[i] == ip){
+            return c.client[i];
+        }
+    }
+    return 0;
+}
+
+void tcpServer::sendAll(const char* msg){
+    for(int i = 0; i < c.maxClients; i++){
+        sendCli(c.client[i], msg);
     }
 }
+
+void tcpServer::startGame() {
+//`    for
+    msg start = msg("T_START_GAME:,;");
+    const char* ms = (start.serialize().c_str());
+    sendAll(ms);
+
+}
+
 
