@@ -94,15 +94,15 @@ void tcpServer::listenNewClients() {
 	}
 }
 
-void tcpServer::recieveCli() {
-//	std::cout << "recieved";
+void tcpServer::receiveCli() {
+//	std::cout << "received";
 	for (int i = 0; i < maxClients; i++) {
 		memset(buffer, '0', 256);
 		if (clients[i].con) {
-//			std::cout << "recieved";
+//			std::cout << "received";
 			intResult = recv(clients[i].c, buffer, bufferLen, 0);
 			if (intResult > 0) {
-//				std::cout << "recieved";
+//				std::cout << "received";
 	//			std::cout << buffer;
 				std::string s(buffer);
 				std::string subs = s.substr(0, intResult);

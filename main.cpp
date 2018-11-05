@@ -32,7 +32,7 @@ int __cdecl main(void) {
 			S.startGame();
 			S.start = true;
 		}
-		S.recieveCli();
+		S.receiveCli();
 //		S.sendAll(m);
 	}
 	

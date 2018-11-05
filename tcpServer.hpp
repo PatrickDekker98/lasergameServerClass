@@ -1,3 +1,6 @@
+#ifndef _TCPSERVER_HPP
+#define _TCPSERVER_HPP
+
 #undef UNICODE
 
 #define WIN32_LEAN_AND_MEAN
@@ -109,11 +112,12 @@ public:
 	~tcpServer();
 	int acceptcl(client *c);
 	void listenNewClients();
-	void recieveCli();
+	void receiveCli();
 	void sendCli(SOCKET cli, msg m);
 	void sendAll( msg m);
 	void startGame();
 	void oneMinuteLeft();
 	void gameOver();
 };
+#endif // !_TCPSERVER_HPP
 
