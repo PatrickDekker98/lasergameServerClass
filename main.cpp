@@ -1,6 +1,8 @@
 #include <iostream>
 #include "tcpServer.hpp"
 
+#pragma comment(lib, "Ws_32.lib")
+
 int main(){
     clients c = clients(1);
     tcpServer S = tcpServer(8080, c);

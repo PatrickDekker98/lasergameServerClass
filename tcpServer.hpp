@@ -1,11 +1,16 @@
 #include <iostream>
-#include <sys/select.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
+//#include <sys/select.h>
+//#include <arpa/inet.h>
+//#include <sys/socket.h>
+//#include <sys/types.h>
+//#include <netinet/in.h>
+#include <winsock2.h>
+#include <ws2def.h>
+#include <ws2tcpip.h>
+#include <io.h>
 #include <string.h>
-#include <unistd.h>
+#include <stdio.h>
+//#include <unistd.h>
 
 class guiListener {
     public:

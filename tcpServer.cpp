@@ -1,11 +1,16 @@
 #include <iostream>
-#include <sys/select.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
 #include "tcpServer.hpp"
-#include <sys/socket.h>
+//#include <sys/select.h>
+//#include <sys/time.h>
+//#include <sys/types.h>
+//#include <unistd.h>
+//#include <sys/socket.h>
 #include <string>
+#include <string.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <stdio.h>
+#include <io.h>
 
 tcpServer::tcpServer(unsigned int port, clients &c):
     port(port),
@@ -14,7 +19,7 @@ tcpServer::tcpServer(unsigned int port, clients &c):
 //    for(int i = 0; i < c.maxClients; i++){
 //        c.client[i] = 0;
 //    }
-    sock = socket(AF_INET, SOCK_STREAM, 0);
+    sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
     if (sock < 0) {
         std::cout << " error creating socket\n";
@@ -74,7 +79,7 @@ void tcpServer::listenNewClient(){
             for(int i = 0; i < c.maxClients; i++){
                 if(c.client[i] == 0){
 //                    getpeername(sd, (struct sockaddr *)&serv_addr, (socklen_t*)&addrlen);
-                    strcpy(c.ip[i], inet_ntoa(serv_addr.sin_addr));
+                    strcpy_s(c.ip[i], inet_ntop(serv_addr.sin_addr));
 //                    c.ip[i] = inet_ntoa(serv_addr.sin_addr);
                     c.client[i] = nSock;
                     break;
@@ -101,7 +106,8 @@ void tcpServer::recieve(){
     for ( int i = 0; i < c.maxClients; i++){
         sd = c.client[i];
         if (FD_ISSET(sd, &readfds)){
-            valread = read(sd, buffer, 256);
+//			valread = read(sd, buffer, 256);
+			valread = read(sd, buffer, 256);
             if(valread == 0){
                 getpeername(sd, (struct sockaddr *)&serv_addr, (socklen_t *)&addrlen);
                 std::cout << inet_ntoa(serv_addr.sin_addr);
