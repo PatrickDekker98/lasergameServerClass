@@ -90,8 +90,8 @@ public:
 		}
 		else {
 			out += (waarde + '0');
-			out += ';';
 		}
+		out += ';';
 		return out;
 	}
 
@@ -140,15 +140,57 @@ public:
 	int maxClients;
 	client clients[6];
 	bool start = false;
+
+	/// \brief
+	/// construct a tcpServer class 
+	/// \details
+	/// construct a tcpServer class using a port, a array of clients, and the maximum clients that are allowed to connect
 	tcpServer(std::string port, client clients[6], int maxClients);
 	~tcpServer();
+
+	/// \brief
+	/// acceptcl accepts a client 
+	/// \details
+	/// accept a client 
+	/// parameter is a pointer to a not yet initialized client
 	int acceptcl(client *c);
+
+	/// \brief
+	/// listenNewClients listens for new clients
+	/// \details
+	/// new clients are listened to and accepted given there are no errors
 	void listenNewClients();
+
+	/// \brief
+	/// recieve messages from clients 
+	/// \details
+	/// recieve messages from clients and act upon them
+	/// this is what's wrong with this library it should just return its val but it does not
+	/// instead it processes th message as well
 	void receiveCli();
+
+	/// \brief 
+	/// sendCLi sends a msg to a client
+	/// \details
+	/// send a message to a specific client 
 	void sendCli(SOCKET cli, msg m);
+
+	/// \brief
+	/// sendAll sends a msg to all clients 
+	/// \details
+	/// sendAll sends a msg to all clients using a for loop
 	void sendAll( msg m);
+
+	/// \brief
+	/// startGame starts game 
 	void startGame();
+
+	/// \brief
+	/// oneMinuteLeft notifies players only one minute is left
 	void oneMinuteLeft();
+
+	/// \brief
+	/// gameOver notifies players only one minute is left
 	void gameOver();
 };
 #endif // !_TCPSERVER_HPP
