@@ -1,3 +1,27 @@
+// ==========================================================================
+//
+// File      : tcpServer.hpp
+// Part of   : LaserGameProject 
+// Copyright : Patrick.p.Dekker@student.hu.nl 2018
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+// ==========================================================================
+
+//this file contains Doxygen lines
+/// @file
+
+/// \mainpage tcpServer library
+/// 
+/// \author Patrick Dekker (patrick.p.dekker@student.hu.nl)
+///
+/// \copyright boost license
+///
+/// this library implements a tcp socket server for our lasergame project at school
+///
+
 #ifndef _TCPSERVER_HPP
 #define _TCPSERVER_HPP
 
@@ -74,6 +98,10 @@ public:
 
 };
 
+/// \brief
+/// client class
+/// \details
+/// this class contains all data you would want to know about your client
 class client {
 public:
 	bool con = 0;
@@ -85,12 +113,15 @@ public:
 	uint8_t dmg;
 	int i;
 	int kills = 0;
+	int deaths = 0;
 };
-
+/// \brief
+/// tcpServer class
+/// \details
+/// this class is the tcp class used in the project
 class tcpServer {
 private:
 	int id = 0;
-	int maxClients;
 	WSADATA wsaData;
 	std::string port;
 	int intResult;
@@ -106,6 +137,7 @@ private:
 	char buffer[512];
 
 public:
+	int maxClients;
 	client clients[6];
 	bool start = false;
 	tcpServer(std::string port, client clients[6], int maxClients);

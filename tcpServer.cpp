@@ -114,9 +114,11 @@ void tcpServer::receiveCli() {
 					for (int j = 0; j < maxClients; j++) {
 						if (clients[j].id == rc.waarde){
 							s1.naam = clients[j].name;
+							clients[i].deaths += 1;
 							sendCli(clients[i].c, s1);
 							s1.command = T_KILL_CONFIRM;
 							sendCli(clients[j].c, s1);
+							clients[j].kills += 1;
 						}
 					}
 				}
