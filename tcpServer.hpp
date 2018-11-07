@@ -37,7 +37,7 @@
 #include <string>
 
 // Need to link with Ws2_32.lib
-#pragma comment (lib, "Ws2_32.lib")
+//#pragma comment (lib, "Ws2_32.lib")
 // #pragma comment (lib, "Mswsock.lib")
 
 #define DEFAULT_BUFLEN 512
@@ -75,7 +75,7 @@ public:
 		int semicolon = basic_string.find(';');
 
 		command = static_cast<CMD>(basic_string[colon + 1] - '0');
-		if (command == T_PLAYER_NAME || command == T_KILLED_BY) {
+		if (command == T_PLAYER_NAME || command == T_KILL_CONFIRM) {
 			naam = basic_string.substr(comma + 1, semicolon - 1);
 		}
 		else {
@@ -87,7 +87,7 @@ public:
 		std::string out = "CMD:";
 		out += ((uint8_t)command + '0');
 		out += ",";
-		if (command == T_PLAYER_NAME || command == T_KILLED_BY) {
+		if (command == T_PLAYER_NAME || command == T_KILL_CONFIRM) {
 			out += naam;
 		}
 		else {
