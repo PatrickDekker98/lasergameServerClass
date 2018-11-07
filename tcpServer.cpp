@@ -1,8 +1,10 @@
 #include "tcpServer.hpp"
 #include <iostream>
 #include <vector>
+#include <QDebug>
+#include <QString>
 
- std::vector<std::string> killedbylog;
+extern std::vector<std::string> killedbylog;
 
 tcpServer::tcpServer(std::string port, client clients[6], int maxClients):
 	port(port),
@@ -109,6 +111,22 @@ void tcpServer::receiveCli() {
 				std::string s(buffer);
 				std::string subs = s.substr(0, intResult);
 				msg rc = msg(subs);
+				
+				if(rc.command == 'C')
+				{
+					rc = msg(subs.substr(8,intResult));	
+					QString subs_qstr = subs.substr(8,intResult).c_str();
+					QString msgdebug = rc.serialize().c_str();
+					qDebug() << subs_qstr;
+					qDebug() << msgdebug;
+				}
+				
+					QString subs_qstr = subs.substr(0,intResult).c_str();
+                    int a = rc.command+'0';
+                    QString msgdebug = QString::number(a);
+					qDebug() << subs_qstr;
+					qDebug() << msgdebug;
+				
 				if ( rc.command == R_KILLED_BY) {
 					msg s1;
 					s1.command = T_KILLED_BY;
@@ -126,8 +144,8 @@ void tcpServer::receiveCli() {
 				}
 				else if (rc.command == R_REQ_PLAYERID) {
 					msg s1;
-					s1.command == T_PLAYER_ID;
-					s1.waarde == clients[i].id;
+                    s1.command = T_PLAYER_ID;
+                    s1.waarde = clients[i].id;
 					sendCli(clients[i].c, s1);
 				}
 			}
@@ -140,6 +158,7 @@ void tcpServer::sendCli(SOCKET cli, msg m) {
 	const char *cmsg = msg.c_str();
 	//std::cout <<sizeof(msg);
 	sendResult = send(cli, cmsg, strlen(cmsg), 0);
+	Sleep(2000);
 }
 
 void tcpServer::sendAll(msg m) {
