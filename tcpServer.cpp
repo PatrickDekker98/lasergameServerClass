@@ -66,8 +66,8 @@ int tcpServer::acceptcl(client *nc) {
 		nc->con = true;
 		FD_ZERO(&nc->set);
 		FD_SET(nc->c, &nc->set);
-		nc->id = id;
 		id++;
+		nc->id = id;
 		nm += (id + '0');
 		nc->name = nm;
 		nc->dmg = 20;
