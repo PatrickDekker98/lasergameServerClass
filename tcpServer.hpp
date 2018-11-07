@@ -116,6 +116,7 @@ public:
 	int i;
 	int kills = 0;
 	int deaths = 0;
+	int hp = 100;
 };
 /// \brief
 /// tcpServer class

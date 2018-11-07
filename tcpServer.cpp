@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 
-extern std::vector<std::string> killedbylog;
+ std::vector<std::string> killedbylog;
 
 tcpServer::tcpServer(std::string port, client clients[6], int maxClients):
 	port(port),
@@ -163,6 +163,11 @@ void tcpServer::startGame() {
 	m.command = T_SELECTED_DMG;
 	for (int i = 0; i < maxClients; i++) {
 		m.waarde = clients[i].dmg;
+		sendCli(clients[i].c, m);
+	}
+	m.command = T_HP;
+	for (int i = 0; i < maxClients; i++) {
+		m.waarde = clients[i].hp;
 		sendCli(clients[i].c, m);
 	}
 	m.command = T_START_GAME;
