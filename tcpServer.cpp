@@ -57,11 +57,10 @@ tcpServer::tcpServer(std::string port, client clients[6], int maxClients):
 	ioctlsocket(serverSocket, FIONBIO, &b);
 }
 
-tcpServer::~tcpServer()
-{
-	for(int i = 0 ; i < maxClients; i++)
-	{
+tcpServer::~tcpServer() {
+	for(int i = 0 ; i < maxClients; i++) {
 		closesocket(clients[i].c);
+		clients[i].con = false;
 	}
 	WSACleanup();
 }
@@ -102,19 +101,14 @@ void tcpServer::listenNewClients() {
 }
 
 void tcpServer::receiveCli() {
-//	std::cout << "received";
 	for (int i = 0; i < maxClients; i++) {
 		memset(buffer, '0', 256);
 		if (clients[i].con) {
-//			std::cout << "received";
 			intResult = recv(clients[i].c, buffer, bufferLen, 0);
 			if (intResult > 0) {
-//				std::cout << "received";
-	//			std::cout << buffer;
 				std::string s(buffer);
 				std::string subs = s.substr(0, intResult);
 				msg rc = msg(subs);
-//				std::cout << rc.waarde;
 				if ( rc.command == R_KILLED_BY) {
 					msg s1;
 					s1.command = T_KILLED_BY;
@@ -130,20 +124,15 @@ void tcpServer::receiveCli() {
 						}
 					}
 				}
+				else if (rc.command == R_REQ_PLAYERID) {
+					msg s1;
+					s1.command == T_PLAYER_ID;
+					s1.waarde == clients[i].id;
+					sendCli(clients[i].c, s1);
+				}
 			}
 		}
 	}
-/*	intResult = recv(cl, buffer, bufferLen, 0);
-	if (intResult > 0) {
-		printf("Bytes received: %d\n", intResult);
-	} else if (intResult == 0) {
-		printf("Connection closing...\n");
-	} else {
-		printf("recv failed with error: %d\n", WSAGetLastError());
-		closesocket(ClientSocket);
-		WSACleanup();
-		exit(1);
-	}*/
 }
 
 void tcpServer::sendCli(SOCKET cli, msg m) {
