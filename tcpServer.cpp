@@ -1,6 +1,8 @@
 #include "tcpServer.hpp"
 #include <iostream>
+#include <vector>
 
+extern std::vector<std::string> killedbylog;
 
 tcpServer::tcpServer(std::string port, client clients[6], int maxClients):
 	port(port),
@@ -57,6 +59,11 @@ tcpServer::tcpServer(std::string port, client clients[6], int maxClients):
 
 tcpServer::~tcpServer()
 {
+	for(int i = 0 ; i < maxClients; i++)
+	{
+		closesocket(clients[i].c);
+	}
+	WSACleanup();
 }
 int tcpServer::acceptcl(client *nc) {
 	nc->i = sizeof(sockaddr);
@@ -119,6 +126,7 @@ void tcpServer::receiveCli() {
 							s1.command = T_KILL_CONFIRM;
 							sendCli(clients[j].c, s1);
 							clients[j].kills += 1;
+                            killedbylog.push_back(clients[i].name + " got killed by " + clients[j].name + "!");
 						}
 					}
 				}
