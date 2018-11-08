@@ -8,6 +8,7 @@ extern std::vector<std::string> killedbylog;
 
 tcpServer::tcpServer(std::string port, client clients[6], int maxClients):
 	port(port),
+//	clients(clients),
 	maxClients(maxClients)
 {
 	if (maxClients > 6) {
@@ -111,7 +112,13 @@ void tcpServer::receiveCli() {
 				std::string subs = s.substr(0, intResult);
 				msg rc = msg(subs);
 				
-				if(rc.command == 'C')
+                QString subs_qstr = subs.substr(0,intResult).c_str();
+                int a = rc.command+'0';
+                QString msgdebug = QString::number(a);
+                qDebug() << subs_qstr;
+                qDebug() << msgdebug;
+
+                if(a == 'C')
 				{
 					rc = msg(subs.substr(8,intResult));	
 					QString subs_qstr = subs.substr(8,intResult).c_str();
@@ -120,11 +127,7 @@ void tcpServer::receiveCli() {
 					qDebug() << msgdebug;
 				}
 				
-					QString subs_qstr = subs.substr(0,intResult).c_str();
-                    int a = rc.command+'0';
-                    QString msgdebug = QString::number(a);
-					qDebug() << subs_qstr;
-					qDebug() << msgdebug;
+
 				
 				if ( rc.command == R_KILLED_BY) {
 					msg s1;
@@ -157,7 +160,7 @@ void tcpServer::sendCli(SOCKET cli, msg m) {
 	const char *cmsg = msg.c_str();
 	//std::cout <<sizeof(msg);
 	sendResult = send(cli, cmsg, strlen(cmsg), 0);
-	Sleep(2000);
+    Sleep(1000);
 }
 
 void tcpServer::sendAll(msg m) {
@@ -165,7 +168,14 @@ void tcpServer::sendAll(msg m) {
 		sendCli(clients[i].c, m);
 	}
 }
-
+void tcpServer::sendNames(){
+    msg m;
+    m.command = T_PLAYER_NAME;
+    for (int i = 0; i < maxClients; i++) {
+        m.naam = clients[i].name;
+        sendCli(clients[i].c, m);
+    }
+}
 void tcpServer::startGame() {
 	msg m;
 	m.command = T_PLAYER_ID;
@@ -173,11 +183,7 @@ void tcpServer::startGame() {
 		m.waarde = clients[i].id;
 		sendCli(clients[i].c, m);
 	}
-	m.command = T_PLAYER_NAME;
-	for (int i = 0; i < maxClients; i++) {
-		m.naam = clients[i].name;
-		sendCli(clients[i].c, m);
-	}
+
 	m.command = T_SELECTED_DMG;
 	for (int i = 0; i < maxClients; i++) {
 		m.waarde = clients[i].dmg;
