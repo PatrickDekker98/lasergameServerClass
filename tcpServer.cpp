@@ -8,7 +8,6 @@ extern std::vector<std::string> killedbylog;
 
 tcpServer::tcpServer(std::string port, client clients[6], int maxClients):
 	port(port),
-//	clients(clients),
 	maxClients(maxClients)
 {
 	if (maxClients > 6) {

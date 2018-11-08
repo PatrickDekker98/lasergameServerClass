@@ -146,6 +146,8 @@ public:
 
 	/// \brief
 	/// construct a tcpServer class 
+	/// \param
+	/// std::string port, client clients[6], int maxClients
 	/// \details
 	/// construct a tcpServer class using a port, a array of clients, and the maximum clients that are allowed to connect
 	tcpServer(std::string port, client clients[6], int maxClients);
@@ -153,6 +155,8 @@ public:
 
 	/// \brief
 	/// acceptcl accepts a client 
+	/// \param
+	/// client *c
 	/// \details
 	/// accept a client 
 	/// parameter is a pointer to a not yet initialized client
@@ -174,12 +178,16 @@ public:
 
 	/// \brief 
 	/// sendCLi sends a msg to a client
+	/// \param
+	/// SOCKET cli, msg m
 	/// \details
 	/// send a message to a specific client 
 	void sendCli(SOCKET cli, msg m);
 
 	/// \brief
-	/// sendAll sends a msg to all clients 
+	/// sendAll sends a msg to all clients
+	/// \param
+	/// msg m
 	/// \details
 	/// sendAll sends a msg to all clients using a for loop
 	void sendAll( msg m);
