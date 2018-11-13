@@ -1,8 +1,6 @@
 #include "tcpServer.hpp"
 #include <iostream>
 #include <vector>
-#include <QDebug>
-#include <QString>
 
 extern std::vector<std::string> killedbylog;
 
@@ -112,19 +110,11 @@ void tcpServer::receiveCli() {
 				std::string subs = s.substr(0, intResult);
 				msg rc = msg(subs);
 				
-                QString subs_qstr = subs.substr(0,intResult).c_str();
                 int a = rc.command+'0';
-                QString msgdebug = QString::number(a);
-                qDebug() << subs_qstr;
-                qDebug() << msgdebug;
 
                 if(a == 'C')
 				{
 					rc = msg(subs.substr(8,intResult));	
-					QString subs_qstr = subs.substr(8,intResult).c_str();
-					QString msgdebug = rc.serialize().c_str();
-					qDebug() << subs_qstr;
-					qDebug() << msgdebug;
 				}
 				
 
@@ -137,6 +127,7 @@ void tcpServer::receiveCli() {
 							s1.naam = clients[j].name;
 							clients[i].deaths += 1;
 							sendCli(clients[i].c, s1);
+                            Sleep(1000);
 							s1.command = T_KILL_CONFIRM;
 							sendCli(clients[j].c, s1);
 							clients[j].kills += 1;
@@ -160,7 +151,6 @@ void tcpServer::sendCli(SOCKET cli, msg m) {
 	const char *cmsg = msg.c_str();
 	//std::cout <<sizeof(msg);
 	sendResult = send(cli, cmsg, strlen(cmsg), 0);
-    Sleep(1000);
 }
 
 void tcpServer::sendAll(msg m) {
@@ -183,17 +173,19 @@ void tcpServer::startGame() {
 		m.waarde = clients[i].id;
 		sendCli(clients[i].c, m);
 	}
-
+    Sleep(1000);
 	m.command = T_SELECTED_DMG;
 	for (int i = 0; i < maxClients; i++) {
 		m.waarde = clients[i].dmg;
 		sendCli(clients[i].c, m);
 	}
+    Sleep(1000);
 	m.command = T_HP;
 	for (int i = 0; i < maxClients; i++) {
 		m.waarde = clients[i].hp;
 		sendCli(clients[i].c, m);
 	}
+    Sleep(1000);
 	m.command = T_START_GAME;
 	sendAll(m);
 }
